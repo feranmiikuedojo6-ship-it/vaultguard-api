@@ -1,0 +1,4 @@
+prisma
+psycopg[binary]
+fastapi
+uvicorn

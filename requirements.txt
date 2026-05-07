@@ -1,4 +1,4 @@
 prisma-client-py
 psycopg2-binary
 fastapi
-uvicorn
+uvicorn# rebuild 

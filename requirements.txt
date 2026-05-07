@@ -1,4 +1,4 @@
-prisma
-psycopg[binary]
+prisma-client-py
+psycopg2-binary
 fastapi
 uvicorn

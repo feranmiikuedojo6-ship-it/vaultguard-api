@@ -7,6 +7,7 @@ colorama==0.4.6
 cryptography==48.0.0
 ecdsa==0.19.2
 fastapi==0.136.1
+greenlet==3.5.0
 h11==0.16.0
 idna==3.13
 pyasn1==0.6.3
@@ -17,6 +18,7 @@ python-jose==3.5.0
 python-multipart==0.0.27
 rsa==4.9.1
 six==1.17.0
+SQLAlchemy==2.0.49
 starlette==1.0.0
 typing-inspection==0.4.2
 typing_extensions==4.15.0

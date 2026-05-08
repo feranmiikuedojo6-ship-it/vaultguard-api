@@ -49,3 +49,23 @@ def login(data: LoginData):
 
     db.close()
     return {"email": user.email, "status": "logged in"}
+    class RegisterData(BaseModel):
+    email: str
+    password: str
+
+@app.post("/register")
+def register(data: RegisterData):
+    db = SessionLocal()
+    
+    # Check if user already exists
+    if db.query(User).filter(User.email == data.email).first():
+        db.close()
+        raise HTTPException(status_code=400, detail="Email already exists")
+    
+    # Hash password and create user
+    hashed = bcrypt.hash(data.password)
+    new_user = User(email=data.email, hashed_password=hashed)
+    db.add(new_user)
+    db.commit()
+    db.close()
+    return {"status": "registered", "email": data.email}

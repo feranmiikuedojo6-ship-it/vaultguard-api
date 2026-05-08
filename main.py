@@ -49,8 +49,7 @@ def login(data: LoginData):
 
     db.close()
     return {"email": user.email, "status": "logged in"}
-    class RegisterData(BaseModel):
-        
+class RegisterData(BaseModel):
     email: str
     password: str
 

@@ -1,8 +1,9 @@
-fastapi==0.115.0
-uvicorn==0.30.1
-psycopg2-binary==2.9.9
-python-jose==3.3.0
+cffi==2.0.0
+cryptography==48.0.0
+ecdsa==0.19.2
+pyasn1==0.6.3
+pycparser==3.0
+python-jose==3.5.0
 python-multipart==0.0.27
-cloudinary==1.39.0
-passlib[bcrypt]
-sqlalchemy
+rsa==4.9.1
+six==1.17.0

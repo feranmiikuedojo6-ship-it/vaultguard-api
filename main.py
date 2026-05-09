@@ -69,10 +69,6 @@ def register(data: RegisterData):
     db.commit()
     db.close()
     return {"status": "registered", "email": data.email}
-    def register(data: RegisterData):
-    ...
-    return {"status": "registered", "email": data.email}
-
 
 class PasswordRequest(BaseModel):
     password: str

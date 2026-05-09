@@ -69,19 +69,22 @@ def register(data: RegisterData):
     db.commit()
     db.close()
     return {"status": "registered", "email": data.email}
-
-class PasswordRequest(BaseModel):
+class PasswordCheck(BaseModel):
     password: str
 
 @app.post("/api/v1/check")
-async def check_password(data: PasswordRequest):
+async def check_password(data: PasswordCheck):
     password = data.password
     
-    strength = "strong" if len(password) >= 8 else "weak"
-    breached = False
+    length = len(password)
+    score = 0
+    if length >= 8: score += 1
+    if length >= 12: score += 1
+    if any(c.isdigit() for c in password): score += 1
+    if any(c.isupper() for c in password): score += 1
+    if any(c.islower() for c in password): score += 1
+    if any(not c.isalnum() for c in password): score += 1
     
-    return {
-        "strength": strength,
-        "breached": breached,
-        "suggestions": []
-    }
+    entropy = min(length * 4, 100)
+    
+    return {"score": score, "entropy": entropy}

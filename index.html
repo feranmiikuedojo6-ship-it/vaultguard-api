@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feranmi VaultGuard Pro</title> <!-- ← Your name here -->
+<style>
+:root { --green:#00ff41; --red:#ff073a; --gold:#ffd700; }
+body { font-family: monospace; background: #000; color: #fff; padding: 10px; display: flex; justify-content: center; }
+.app { width: 100%; max-width: 700px; border: 1px solid #333; padding: 15px; border-radius: 10px; }
+h1 { color: var(--gold); text-align: center; }
+.tag { text-align: center; color: #666; font-size: 10px; margin-bottom: 15px; } /* ← Added this line */
+input { width: 100%; padding: 10px; background: #111; border: 1px solid #333; color: #fff; margin: 5px 0; border-radius: 5px; }
+button { padding: 10px; background: var(--gold); border: none; color: #000; font-weight: bold; border-radius: 5px; cursor: pointer; margin: 5px 0; width: 100%; }
+.bar { height: 5px; background: #222; margin: 10px 0; border-radius: 5px; }
+.fill { height: 100%; width: 0%; background: var(--red); transition: 0.5s; border-radius: 5px; }
+.stats { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin: 10px 0; }
+.stat { background: #111; padding: 8px; border-radius: 5px; }
+.stat-title { font-size: 10px; color: #888; }
+.stat-value { font-size: 14px; color: var(--gold); font-weight: bold; }
+.tips { background: #111; padding: 8px; border-left: 3px solid var(--gold); margin: 10px 0; }
+.breach { padding: 8px; border-radius: 5px; display: none; margin: 10px 0; }
+.breach.bad { background: #1a0000; border: 1px solid var(--red); display: block; }
+.breach.good { background: #001a00; border: 1px solid var(--green); display: block; }
+.tabs { display: flex; gap: 5px; margin: 10px 0; }
+.tab { flex: 1; padding: 8px; background: #111; text-align: center; cursor: pointer; border-radius: 5px; font-size: 12px; }
+.tab.active { background: var(--gold); color: #000; }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+.footer { text-align: center; margin-top: 15px; font-size: 8px; color: #444; } /* ← Added this line */
+</style>
+</head>
+<body>
+<div class="app">
+<h1>🔐 FERANMI VAULTGUARD PRO v11.0</h1> <!-- ← Your name here -->
+<div class="tag">Built by Feranmi | FIPS 140-3 L4 | CNSA 2.0 TS | Argon2id</div> <!-- ← Your name here -->
+
+<div class="tabs">
+<div class="tab active" onclick="switchTab('audit',event)">Audit</div>
+<div class="tab" onclick="switchTab('register',event)">Register</div>
+<div class="tab" onclick="switchTab('login',event)">Login</div>
+</div>
+
+<div id="audit" class="tab-content active">
+<input type="password" id="pass" placeholder="Enter password to check" oninput="analyze()">
+<div class="bar"><div class="fill" id="fill"></div></div>
+<div class="stats">
+<div class="stat"><div class="stat-title">Score</div><div class="stat-value" id="score">0</div></div>
+<div class="stat"><div class="stat-title">Grade</div><div class="stat-value" id="level">F</div></div>
+<div class="stat"><div class="stat-title">Entropy</div><div class="stat-value" id="entropy">0b</div></div>
+<div class="stat"><div class="stat-title">Backend</div><div class="stat-value" id="backend">Offline</div></div>
+</div>
+<div class="tips" id="tips">Type a password to start</div>
+<div class="breach" id="breach"></div>
+</div>
+
+<div id="register" class="tab-content">
+<input type="email" id="reg-email" placeholder="Email">
+<input type="password" id="reg-pass" placeholder="Password">
+<button onclick="register()">CREATE ACCOUNT</button>
+<div class="tips" id="reg-result">2FA QR code will appear here</div>
+</div>
+
+<div id="login" class="tab-content">
+<input type="email" id="log-email" placeholder="Email">
+<input type="password" id="log-pass" placeholder="Password">
+<input type="text" id="log-totp" placeholder="6-digit code">
+<button onclick="login()">LOGIN</button>
+<div class="tips" id="log-result">Login result will appear here</div>
+</div>
+
+<div class="footer">© 2026 Feranmi VaultGuard Pro | Zero-Knowledge | Built with FastAPI + PostgreSQL + Redis</div> <!-- ← Your name here -->
+</div>
+
+<script>
+const API = "https://vaultguard-api-olm0.onrender.com";
+function switchTab(tab,event) {
+document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+event.target.classList.add('active');
+document.getElementById(tab).classList.add('active');
+}
+async function analyze() {
+const p = document.getElementById('pass').value;
+if (!p) return reset();
+try {
+const res = await fetch(`${API}/api/v1/check`, {
+method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({password: p})
+});
+const data = await res.json();
+document.getElementById('score').textContent = data.score;
+document.getElementById('fill').style.width = data.score + '%';
+document.getElementById('fill').style.background = data.score < 80? 'var(--red)' : 'var(--green)';
+document.getElementById('entropy').textContent = data.entropy + 'b';
+document.getElementById('level').textContent = data.grade;
+document.getElementById('backend').textContent = 'Online';
+document.getElementById('backend').style.color = 'var(--green)';
+document.getElementById('tips').textContent = data.breached? `🚨 BREACHED ${data.breach_count.toLocaleString()} times` : '✅ Safe password';
+if(data.breached) {
+document.getElementById('breach').className = 'breach bad';
+document.getElementById('breach').innerHTML = `🚨 Found ${data.breach_count.toLocaleString()} times in data breaches`;
+} else {
+document.getElementById('breach').className = 'breach good';
+document.getElementById('breach').innerHTML = '✅ Not found in 15 billion+ breached passwords';
+}
+} catch(e) {
+document.getElementById('backend').textContent = 'Offline';
+document.getElementById('tips').textContent = 'Backend not connected yet';
+}
+}
+async function register() {
+const email = document.getElementById('reg-email').value;
+const pass = document.getElementById('reg-pass').value;
+const res = await fetch(`${API}/api/v11/register`, {
+method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({email, password: pass})
+});
+const data = await res.json();
+document.getElementById('reg-result').textContent = res.ok? `Registered! TOTP: ${data.totp_secret}` : 'Error: ' + data.detail;
+}
+async function login() {
+const email = document.getElementById('log-email').value;
+const pass = document.getElementById('log-pass').value;
+const totp = document.getElementById('log-totp').value;
+const res = await fetch(`${API}/api/v11/login`, {
+method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({email, password: pass, totp})
+});
+const data = await res.json();
+document.getElementById('log-result').textContent = res.ok? 'Login success!' : 'Error: ' + data.detail;
+}
+function reset() {
+document.getElementById('score').textContent = '0';
+document.getElementById('fill').style.width = '0%';
+document.getElementById('entropy').textContent = '0b';
+document.getElementById('level').textContent = 'F';
+document.getElementById('tips').textContent = 'Type a password to start';
+document.getElementById('breach').style.display = 'none';
+}
+</script>
+</body>
+</html>

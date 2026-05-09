@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 fastapi==0.115.0
 uvicorn[standard]==0.30.6
 argon2-cffi==23.1.0
@@ -9,7 +8,7 @@ python-jose==3.3.0
 pyotp==2.9.0
 httpx==0.27.2
 slowapi==0.1.9
-=======
+
 annotated-doc==0.0.4
 annotated-types==0.7.0
 anyio==4.13.0
@@ -34,11 +33,11 @@ rsa==4.9.1
 six==1.17.0
 SQLAlchemy==2.0.49
 starlette==1.0.0
-<<<<<<< HEAD
+
 typing-inspection==0.4.2
 typing_extensions==4.15.0
 uvicorn==0.46.0
->>>>>>> dd64fb722599f47a90b2abc6b1b2dcdbb2785718
-=======
+
+
 uvicorn[standard]==0.35.0
->>>>>>> c1d0b3f3b91cb314fd24ec992e10e0ba7bf1cb18
+

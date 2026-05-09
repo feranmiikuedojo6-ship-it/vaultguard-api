@@ -69,3 +69,23 @@ def register(data: RegisterData):
     db.commit()
     db.close()
     return {"status": "registered", "email": data.email}
+    def register(data: RegisterData):
+    ...
+    return {"status": "registered", "email": data.email}
+
+
+class PasswordRequest(BaseModel):
+    password: str
+
+@app.post("/api/v1/check")
+async def check_password(data: PasswordRequest):
+    password = data.password
+    
+    strength = "strong" if len(password) >= 8 else "weak"
+    breached = False
+    
+    return {
+        "strength": strength,
+        "breached": breached,
+        "suggestions": []
+    }

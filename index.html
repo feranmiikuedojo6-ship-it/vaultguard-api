@@ -81,7 +81,7 @@ event.target.classList.add('active');
 document.getElementById(tab).classList.add('active');
 }
 async function analyze() {
-const p = document.getElementById('pass').value;
+const p = document.getElementById('log-pass').value;
 if (!p) return reset();
 try {
 const res = await fetch(`${API}/api/v1/check`, {

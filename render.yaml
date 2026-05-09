@@ -1,0 +1,7 @@
+services:
+    - type: web
+      plan: free
+      name: vaultguard-api
+      runtime: python
+      buildCommand: python3.12 -m pip install -r requirements.txt
+      startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT

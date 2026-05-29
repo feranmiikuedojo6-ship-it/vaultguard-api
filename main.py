@@ -152,15 +152,6 @@ async def login(data: UserLogin, db=Depends(get_db)):
 
 @app.get("/api/v11/health")
 async def health(): return {"status": "ok", "version": "11.0", "owner": "Feranmi"} # ← Your name here
-=======
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
-from sqlalchemy import create_engine, Column, Integer, String
-from sqlalchemy.orm import declarative_base, sessionmaker
-from passlib.hash import bcrypt
-
-app = FastAPI()
-from fastapi.middleware.cors import CORSMiddleware
 
 app.add_middleware(
     CORSMiddleware,
@@ -169,16 +160,10 @@ app.add_middleware(
     allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["*"],
 )
-@app.get("/health")
-def health_check():
-    return {"status": "ok"}
+
     # Database setup
 DATABASE_URL = "sqlite:///./users.db"
-engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
-SessionLocal = sessionmaker(bind=engine)
-Base = declarative_base()
 
-# User table
 class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, index=True)

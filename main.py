@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 from fastapi import FastAPI, HTTPException, Depends, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -246,4 +246,3 @@ async def check_password(data: PasswordCheck):
     entropy = min(length * 4, 100)
     
     return {"score": score, "entropy": entropy}
->>>>>>> dd64fb722599f47a90b2abc6b1b2dcdbb2785718

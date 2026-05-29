@@ -161,14 +161,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-    # Database setup
-DATABASE_URL = "sqlite:///./users.db"
 
-class User(Base):
-    __tablename__ = "users"
-    id = Column(Integer, primary_key=True, index=True)
-    email = Column(String, unique=True, index=True)
-    hashed_password = Column(String)
 
 Base.metadata.create_all(bind=engine)
 
